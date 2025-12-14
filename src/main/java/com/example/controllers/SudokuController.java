@@ -1,7 +1,8 @@
 package com.example.controllers;
 
+import com.example.model.CellNode;
 import com.example.model.Move;
-import com.example.model.SudokuBoard;
+import com.example.model.SudokuBoardLL;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -21,28 +22,38 @@ import java.util.ResourceBundle;
 
 public class SudokuController implements Initializable {
 
-    // ---------- FXML ----------
+    // =======================
+    // FXML
+    // =======================
     @FXML private GridPane board;
     @FXML private GridPane keypad;
     @FXML private Button btnUndo;
     @FXML private Button btnNewGame;
     @FXML private Label lblTime;
 
-    // ---------- UI ----------
+    // =======================
+    // UI
+    // =======================
     private Button celdaSeleccionada;
 
-    // ---------- MODELO ----------
-    private final SudokuBoard model = new SudokuBoard();
+    // =======================
+    // MODELO (LinkedList)
+    // =======================
+    private final SudokuBoardLL model = new SudokuBoardLL();
 
-    // ---------- ESTRUCTURA DE DATOS ----------
+    // =======================
+    // PILA (Undo)
+    // =======================
     private final Deque<Move> historial = new ArrayDeque<>();
 
-    // ---------- TIMER ----------
+    // =======================
+    // TIMER
+    // =======================
     private Timeline timer;
     private int secondsElapsed = 0;
 
     // =========================================================
-    //  INIT
+    // INIT
     // =========================================================
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -54,7 +65,7 @@ public class SudokuController implements Initializable {
     }
 
     // =========================================================
-    //  TABLERO
+    // TABLERO (UI)
     // =========================================================
     private void construirTablero() {
         board.getChildren().clear();
@@ -94,7 +105,7 @@ public class SudokuController implements Initializable {
     }
 
     // =========================================================
-    //  KEYPAD
+    // KEYPAD
     // =========================================================
     private void conectarKeypad() {
         for (Node n : keypad.getChildren()) {
@@ -114,37 +125,42 @@ public class SudokuController implements Initializable {
         int[] pos = (int[]) celdaSeleccionada.getUserData();
         int r = pos[0], c = pos[1];
 
-        if (model.isFixed(r, c)) return;
+        CellNode node = model.getNode(r, c);
+        if (node == null || node.fixed) return;
 
         int despues = Integer.parseInt(numero);
-        int antes = model.get(r, c);
+        int antes = node.value;
 
         if (antes == despues) return;
 
-        // validación Sudoku
         if (!model.isValidMove(r, c, despues)) {
-            // aquí luego puedes marcar error visual
+            // luego puedes pintar error visual
             return;
         }
 
         historial.push(new Move(r, c, antes, despues));
-        model.set(r, c, despues);
+
+        node.value = despues;
         celdaSeleccionada.setText(numero);
     }
 
     // =========================================================
-    //  UNDO
+    // UNDO
     // =========================================================
     private void conectarUndo() {
-        if (btnUndo == null) return;
-        btnUndo.setOnAction(e -> deshacer());
+        if (btnUndo != null) {
+            btnUndo.setOnAction(e -> deshacer());
+        }
     }
 
     private void deshacer() {
         if (historial.isEmpty()) return;
 
         Move m = historial.pop();
-        model.set(m.row, m.col, m.before);
+        CellNode node = model.getNode(m.row, m.col);
+        if (node == null) return;
+
+        node.value = m.before;
 
         Button cell = getCell(m.row, m.col);
         if (cell != null) {
@@ -154,11 +170,12 @@ public class SudokuController implements Initializable {
     }
 
     // =========================================================
-    //  NEW GAME
+    // NEW GAME
     // =========================================================
     private void conectarNewGame() {
-        if (btnNewGame == null) return;
-        btnNewGame.setOnAction(e -> nuevoJuego());
+        if (btnNewGame != null) {
+            btnNewGame.setOnAction(e -> nuevoJuego());
+        }
     }
 
     private void nuevoJuego() {
@@ -173,14 +190,13 @@ public class SudokuController implements Initializable {
 
         for (Node n : board.getChildren()) {
             if (n instanceof Button) {
-                Button b = (Button) n;
-                b.setText("");
+                ((Button) n).setText("");
             }
         }
     }
 
     // =========================================================
-    //  TIMER
+    // TIMER
     // =========================================================
     private void iniciarTimer() {
         if (timer != null) timer.stop();
@@ -208,7 +224,7 @@ public class SudokuController implements Initializable {
     }
 
     // =========================================================
-    //  HELPERS
+    // HELPERS
     // =========================================================
     private Button getCell(int row, int col) {
         for (Node n : board.getChildren()) {
