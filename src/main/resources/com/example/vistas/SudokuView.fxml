@@ -78,7 +78,7 @@
 
             <HBox spacing="10">
                 <Button text="💡" styleClass="icon-btn"/>
-                <Button text="✎" styleClass="icon-btn"/>
+                <Button fx:id="btnSol" text="✎ Solve" styleClass="icon-btn" onAction="#resolverSudoku" />
                 <Button fx:id="btnUndo"  text="↺" styleClass="icon-btn"/>
             </HBox>
 
