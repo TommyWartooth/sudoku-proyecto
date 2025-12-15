@@ -1,8 +1,17 @@
 package com.example.controllers;
 
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.ResourceBundle;
+
+import com.example.dao.PartidaSudokuDAO;
 import com.example.model.CellNode;
 import com.example.model.Move;
+import com.example.model.PartidaSudoku;
 import com.example.model.SudokuBoardLL;
+import com.example.utils.OrdenamientoSudoku;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,11 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.util.Duration;
-
-import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.ResourceBundle;
 
 public class SudokuController implements Initializable {
 
@@ -52,9 +56,15 @@ public class SudokuController implements Initializable {
     private Timeline timer;
     private int secondsElapsed = 0;
 
-    // =========================================================
-    // INIT
-    // =========================================================
+    private String dificultadActual = "EASY"; //de momento está así hasta q haya la lógica para elegir dificultad unu
+
+    // ====== DB (ajusta a tu BD) ======
+    private final PartidaSudokuDAO dao = new PartidaSudokuDAO(
+        "jdbc:postgresql://localhost:5432/Sudoku",
+        "postgres",
+        " "
+    );
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         construirTablero();
@@ -62,6 +72,7 @@ public class SudokuController implements Initializable {
         conectarUndo();
         conectarNewGame();
         iniciarTimer();
+        testBD();
     }
 
     // =========================================================
@@ -237,4 +248,61 @@ public class SudokuController implements Initializable {
         }
         return null;
     }
+
+    // =======================
+    // GUARDAR PARTIDA EN BD
+    // =======================
+    private void guardarPartidaEnBD() {
+        try {
+            dao.insertar(dificultadActual, secondsElapsed);
+
+            PartidaSudoku[] partidas = dao.listarTodas();
+            OrdenamientoSudoku.ordenarPorTiempoAsc(partidas);
+
+            System.out.println("=== RANKING (menor tiempo mejor) ===");
+            for (int i = 0; i < partidas.length; i++) {
+                PartidaSudoku p = partidas[i];
+                System.out.println((i + 1) + ") " + p.getDificultad()
+                        + " - " + p.getTiempoSegundos() + "s - " + p.getFecha());
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // Solo para prueba rápida (actívalo en initialize si quieres)
+    private void probarGuardarRanking() {
+        secondsElapsed = 123;
+        guardarPartidaEnBD();
+    }
+
+    private void testBD() {
+    try {
+        // 1) Inserta una partida de prueba en la BD
+        dao.insertar("EASY", 88);
+
+        // 2) Lee todas las partidas
+        PartidaSudoku[] partidas = dao.listarTodas();
+
+        // 3) Ordena por tu algoritmo
+        OrdenamientoSudoku.ordenarPorTiempoAsc(partidas);
+
+        // 4) Imprime en consola
+        System.out.println("=== PARTIDAS EN BD ===");
+        for (PartidaSudoku p : partidas) {
+            System.out.println(
+                p.getIdPartida() + " | " +
+                p.getDificultad() + " | " +
+                p.getTiempoSegundos() + "s | " +
+                p.getFecha()
+            );
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+
+
 }
