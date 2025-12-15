@@ -259,7 +259,7 @@ private void refrescarClaseActiva() {
     }
 private final SudokuGenerator generator = new SudokuGenerator();
 private void nuevoJuego() {
-    nuevoJuegoConDificultad(dificultadActual);
+       nuevoJuegoConDificultad(dificultadActual);
 }
 private void pintarTableroDesdeModelo() {
     for (Node nodo : board.getChildren()) {
@@ -379,7 +379,23 @@ private void resolverSudoku() {
     }
 }
 public void setDificultadInicial(String diff) {
-    this.dificultadActual = diff;
+    if (diff == null || diff.isBlank()) diff = "MEDIUM";
+
+    this.dificultadActual = diff.toUpperCase();
+
+    // marcar el toggle correcto (si ya existe en UI)
+    if (btnEasy != null) {
+        switch (dificultadActual) {
+            case "EASY" -> btnEasy.setSelected(true);
+            case "HARD" -> btnHard.setSelected(true);
+            case "EXPERT" -> btnExpert.setSelected(true);
+            default -> btnMedium.setSelected(true);
+        }
+        refrescarClaseActiva();
+    }
+
+    // ✅ aquí se genera el tablero al entrar
+    nuevoJuegoConDificultad(dificultadActual);
 }
 
 
