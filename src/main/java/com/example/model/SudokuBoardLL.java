@@ -2,68 +2,217 @@ package com.example.model;
 
 public class SudokuBoardLL {
 
-    private CellNode head;
+    // =======================
+    // LISTA ENLAZADA (81 nodos)
+    // =======================
+    private CellNode primerNodo;
 
+    // =======================
+    // CONSTRUCTOR
+    // =======================
     public SudokuBoardLL() {
-        build81();
+        construirTableroCon81Celdas();
     }
 
-    private void build81() {
-        CellNode prev = null;
-        for (int r = 0; r < 9; r++) {
-            for (int c = 0; c < 9; c++) {
-                CellNode n = new CellNode(r, c);
-                if (head == null) head = n;
-                if (prev != null) prev.next = n;
-                prev = n;
+    // =======================
+    // CREACIÓN DEL TABLERO
+    // =======================
+    private void construirTableroCon81Celdas() {
+        CellNode nodoAnterior = null;
+
+        for (int fila = 0; fila < 9; fila++) {
+            for (int columna = 0; columna < 9; columna++) {
+
+                CellNode nuevoNodo = new CellNode(fila, columna);
+
+                if (primerNodo == null) {
+                    primerNodo = nuevoNodo;
+                }
+
+                if (nodoAnterior != null) {
+                    nodoAnterior.next = nuevoNodo;
+                }
+
+                nodoAnterior = nuevoNodo;
             }
         }
     }
 
-    public CellNode getNode(int r, int c) {
-        CellNode cur = head;
-        while (cur != null) {
-            if (cur.row == r && cur.col == c) return cur;
-            cur = cur.next;
+    // =======================
+    // GETTERS IMPORTANTES
+    // =======================
+    public CellNode getPrimerNodo() {
+        return primerNodo;
+    }
+
+    // (alias por si tu controller/validator usa getNode)
+    public CellNode getNode(int fila, int columna) {
+        return obtenerCelda(fila, columna);
+    }
+
+    // =======================
+    // ACCESO A CELDAS
+    // =======================
+    public CellNode obtenerCelda(int fila, int columna) {
+        CellNode actual = primerNodo;
+
+        while (actual != null) {
+            if (actual.row == fila && actual.col == columna) {
+                return actual;
+            }
+            actual = actual.next;
         }
         return null;
     }
 
-    public void clearAll() {
-        CellNode cur = head;
-        while (cur != null) {
-            cur.value = 0;
-            cur.fixed = false;
-            cur = cur.next;
+    // =======================
+    // LIMPIAR TABLERO
+    // =======================
+    public void limpiarTablero() {
+        CellNode actual = primerNodo;
+
+        while (actual != null) {
+            actual.value = 0;
+            actual.fixed = false;
+            actual = actual.next;
         }
     }
 
-    // ✅ Validador usando SOLO nodos
-    public boolean isValidMove(int r, int c, int value) {
-        if (value < 1 || value > 9) return false;
+    // =======================
+    // MARCAR FIJAS
+    // =======================
+    public void marcarCeldasFijasSegunValor() {
+        CellNode actual = primerNodo;
+        while (actual != null) {
+            actual.fixed = (actual.value != 0);
+            actual = actual.next;
+        }
+    }
 
-        CellNode target = getNode(r, c);
-        if (target == null) return false;
-        if (target.fixed) return false;
+    // =========================================================
+    // VALIDACIÓN DE JUGADA (Sudoku normal)
+    // =========================================================
+    public boolean movimientoEsValido(int fila, int columna, int numero) {
 
-        int br = (r / 3) * 3;
-        int bc = (c / 3) * 3;
+        if (numero < 1 || numero > 9) return false;
 
-        CellNode cur = head;
-        while (cur != null) {
-            if (cur != target && cur.value == value) {
+        CellNode celdaObjetivo = obtenerCelda(fila, columna);
+        if (celdaObjetivo == null) return false;
+        if (celdaObjetivo.fixed) return false;
 
-                boolean sameRow = (cur.row == r);
-                boolean sameCol = (cur.col == c);
+        int filaBloque = (fila / 3) * 3;
+        int columnaBloque = (columna / 3) * 3;
 
-                boolean sameBlock =
-                        cur.row >= br && cur.row < br + 3 &&
-                        cur.col >= bc && cur.col < bc + 3;
+        CellNode actual = primerNodo;
+        while (actual != null) {
 
-                if (sameRow || sameCol || sameBlock) return false;
+            if (actual != celdaObjetivo && actual.value == numero) {
+
+                boolean mismaFila = (actual.row == fila);
+                boolean mismaColumna = (actual.col == columna);
+
+                boolean mismoBloque =
+                        actual.row >= filaBloque && actual.row < filaBloque + 3 &&
+                        actual.col >= columnaBloque && actual.col < columnaBloque + 3;
+
+                if (mismaFila || mismaColumna || mismoBloque) {
+                    return false;
+                }
             }
-            cur = cur.next;
+            actual = actual.next;
         }
         return true;
     }
+
+    // =========================================================
+    // VALIDACIÓN DEL TABLERO COMPLETO
+    // =========================================================
+    public boolean tableroEsValido() {
+
+        for (int fila = 0; fila < 9; fila++) {
+            if (!filaEsValida(fila)) return false;
+        }
+
+        for (int columna = 0; columna < 9; columna++) {
+            if (!columnaEsValida(columna)) return false;
+        }
+
+        for (int filaBloque = 0; filaBloque < 9; filaBloque += 3) {
+            for (int colBloque = 0; colBloque < 9; colBloque += 3) {
+                if (!bloqueEsValido(filaBloque, colBloque)) return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean sudokuResuelto() {
+        CellNode actual = primerNodo;
+
+        while (actual != null) {
+            if (actual.value == 0) return false;
+            actual = actual.next;
+        }
+        return tableroEsValido();
+    }
+
+    // =========================================================
+    // VALIDACIONES INTERNAS
+    // =========================================================
+    private boolean filaEsValida(int fila) {
+        boolean[] usado = new boolean[10];
+        CellNode actual = primerNodo;
+
+        while (actual != null) {
+            if (actual.row == fila) {
+                int v = actual.value;
+                if (v != 0) {
+                    if (usado[v]) return false;
+                    usado[v] = true;
+                }
+            }
+            actual = actual.next;
+        }
+        return true;
+    }
+
+    private boolean columnaEsValida(int columna) {
+        boolean[] usado = new boolean[10];
+        CellNode actual = primerNodo;
+
+        while (actual != null) {
+            if (actual.col == columna) {
+                int v = actual.value;
+                if (v != 0) {
+                    if (usado[v]) return false;
+                    usado[v] = true;
+                }
+            }
+            actual = actual.next;
+        }
+        return true;
+    }
+
+    private boolean bloqueEsValido(int filaInicio, int columnaInicio) {
+        boolean[] usado = new boolean[10];
+        CellNode actual = primerNodo;
+
+        while (actual != null) {
+            boolean dentroDelBloque =
+                    actual.row >= filaInicio && actual.row < filaInicio + 3 &&
+                    actual.col >= columnaInicio && actual.col < columnaInicio + 3;
+
+            if (dentroDelBloque) {
+                int v = actual.value;
+                if (v != 0) {
+                    if (usado[v]) return false;
+                    usado[v] = true;
+                }
+            }
+            actual = actual.next;
+        }
+        return true;
+    }
+    
+    
 }
