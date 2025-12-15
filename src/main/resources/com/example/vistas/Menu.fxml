@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.controllers.MenuController"
+      alignment="CENTER"
+      spacing="18"
+      styleClass="root">
+
+    <VBox spacing="12" alignment="CENTER" styleClass="menu-card">
+
+        <Label text="SUDOKU" styleClass="menu-title"/>
+        <Label text="Selecciona dificultad" styleClass="menu-subtitle"/>
+
+        <Label text="Dificultad" styleClass="menu-label"/>
+        <ComboBox fx:id="cmbDificultad" prefWidth="200"/>
+
+        <Button text="Iniciar partida"
+                onAction="#iniciar"
+                styleClass="btn-primary"
+                maxWidth="200"/>
+
+        <Button text="Salir"
+                onAction="#salir"
+                styleClass="btn-ghost"
+                maxWidth="200"/>
+                <Button text="🏆 Ranking" onAction="#verRanking" styleClass="btn-ghost" />
+
+    </VBox>
+</VBox>

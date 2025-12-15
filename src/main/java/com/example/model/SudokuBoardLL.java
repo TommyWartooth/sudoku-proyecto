@@ -5,35 +5,35 @@ public class SudokuBoardLL {
     // =======================
     // LISTA ENLAZADA (81 nodos)
     // =======================
-    private CellNode primerNodo;
+    private CellNode primerNodo; //atributo d primernodo
 
     // =======================
     // CONSTRUCTOR
     // =======================
     public SudokuBoardLL() {
-        construirTableroCon81Celdas();
+        construirTableroCon81Celdas(); //yama a la funsion de construirtablero
     }
 
     // =======================
     // CREACIÓN DEL TABLERO
     // =======================
     private void construirTableroCon81Celdas() {
-        CellNode nodoAnterior = null;
+        CellNode nodoAnterior = null; //nodo gay
 
-        for (int fila = 0; fila < 9; fila++) {
-            for (int columna = 0; columna < 9; columna++) {
+        for (int fila = 0; fila < 9; fila++) { // aca recorre 9 veces para hacer las 9 filas
+            for (int columna = 0; columna < 9; columna++) { // aka lomismio pero con columnas
 
-                CellNode nuevoNodo = new CellNode(fila, columna);
+                CellNode nuevoNodo = new CellNode(fila, columna); // aka creamos un nodo con los atributo d fila y columna y cmo se esta recooriendo se crean asi y aja
 
-                if (primerNodo == null) {
-                    primerNodo = nuevoNodo;
+                if (primerNodo == null) { // entonses s ´pregunta mmmm hay primer nodo? y si no hay o sea q es null
+                    primerNodo = nuevoNodo; // ase q el primer nodo sea el nuevoNodo
                 }
 
-                if (nodoAnterior != null) {
+                if (nodoAnterior != null) { // siel nodo antterior noes nnull entonces ase q el siguiente nodoqtenga sea un nuevo nodo 
                     nodoAnterior.next = nuevoNodo;
                 }
 
-                nodoAnterior = nuevoNodo;
+                nodoAnterior = nuevoNodo; // para terminar el bucle de columnas hace q el nuevo nod q hemos creado dentro del bucle se vuelva el nodoanterior
             }
         }
     }

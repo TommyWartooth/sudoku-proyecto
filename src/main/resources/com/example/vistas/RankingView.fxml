@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox spacing="14"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.controllers.RankingController"
+      styleClass="ranking-container">
+
+    <!-- TITULO -->
+    <VBox spacing="4">
+        <Label text="🏆 Ranking Sudoku" styleClass="ranking-title"/>
+        <Label text="Menor tiempo = mejor posición"
+               styleClass="ranking-subtitle"/>
+    </VBox>
+
+    <!-- HEADER -->
+    <HBox spacing="20" styleClass="ranking-header">
+        <Label text="#" prefWidth="40"/>
+        <Label text="Dificultad" prefWidth="100"/>
+        <Label text="Tiempo (s)" prefWidth="100"/>
+        <Label text="Fecha"/>
+    </HBox>
+
+    <!-- LISTA -->
+   <VBox fx:id="rankingBox"
+      spacing="6"
+      styleClass="ranking-table">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+</VBox>
+
+
+</VBox>

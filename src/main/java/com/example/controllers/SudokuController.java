@@ -25,9 +25,17 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.util.Duration;
-
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 
 public class SudokuController implements Initializable {
+@FXML private ToggleButton btnEasy;
+@FXML private ToggleButton btnMedium;
+@FXML private ToggleButton btnHard;
+@FXML private ToggleButton btnExpert;
+
+private final ToggleGroup grupoDificultad = new ToggleGroup();
+private boolean partidaGuardada = false;
 
     // =======================
     // FXML
@@ -65,19 +73,62 @@ public class SudokuController implements Initializable {
     private final PartidaSudokuDAO dao = new PartidaSudokuDAO(
         "jdbc:postgresql://localhost:5432/Sudoku",
         "postgres",
-        " "
+        "frisky"
     );
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        testBD();
-        construirTableroUI();
-        conectarTecladoNumerico();
-        conectarBotonDeshacer();
-        conectarBotonNuevoJuego();
-        iniciarTemporizador();
-    }
+
+public void initialize(URL url, ResourceBundle rb) {
     
+    construirTableroUI();
+    conectarTecladoNumerico();
+    conectarBotonDeshacer();
+    conectarBotonNuevoJuego();
+    iniciarTemporizador();
+
+    configurarDificultadUI();
+    aplicarDificultadInicial();
+}
+
+
+private void configurarDificultadUI() {
+    btnEasy.setToggleGroup(grupoDificultad);
+    btnMedium.setToggleGroup(grupoDificultad);
+    btnHard.setToggleGroup(grupoDificultad);
+    btnExpert.setToggleGroup(grupoDificultad);
+}
+
+private void aplicarDificultadInicial() {
+    switch (dificultadActual) {
+        case "EASY"   -> btnEasy.setSelected(true);
+        case "HARD"   -> btnHard.setSelected(true);
+        case "EXPERT" -> btnExpert.setSelected(true);
+        default       -> btnMedium.setSelected(true);
+    }
+    refrescarClaseActiva();
+}
+
+@FXML
+private void cambiarDificultad() {
+    ToggleButton sel = (ToggleButton) grupoDificultad.getSelectedToggle();
+    if (sel == null) return;
+
+    dificultadActual = sel.getText().toUpperCase(); // EASY, MEDIUM...
+
+    refrescarClaseActiva();
+    nuevoJuegoConDificultad(dificultadActual);
+}
+
+private void refrescarClaseActiva() {
+    btnEasy.getStyleClass().remove("top-pill--active");
+    btnMedium.getStyleClass().remove("top-pill--active");
+    btnHard.getStyleClass().remove("top-pill--active");
+    btnExpert.getStyleClass().remove("top-pill--active");
+
+    ToggleButton sel = (ToggleButton) grupoDificultad.getSelectedToggle();
+    if (sel != null) sel.getStyleClass().add("top-pill--active");
+}
+
 
     // =========================================================
     // TABLERO (UI)
@@ -164,9 +215,11 @@ public class SudokuController implements Initializable {
         celdaSeleccionada.setText(numeroTexto);
 
         // ✅ chequear si ya se resolvió
-        if (model.sudokuResuelto()) {
-            System.out.println("🎉 Sudoku resuelto correctamente!");
-        }
+       if (model.sudokuResuelto() && !partidaGuardada) {
+        System.out.println("🎉 Sudoku resuelto correctamente!");
+        guardarPartidaEnBD();
+        partidaGuardada = true;
+    }
     }
 
     // =========================================================
@@ -205,15 +258,8 @@ public class SudokuController implements Initializable {
         }
     }
 private final SudokuGenerator generator = new SudokuGenerator();
-
 private void nuevoJuego() {
-    pilaMovimientos.clear();
-    model.limpiarTablero();
-    resetearTemporizador();
-
-    generator.generarNuevoPuzzle(model, SudokuGenerator.Dificultad.MEDIUM);
-
-    pintarTableroDesdeModelo();
+    nuevoJuegoConDificultad(dificultadActual);
 }
 private void pintarTableroDesdeModelo() {
     for (Node nodo : board.getChildren()) {
@@ -306,33 +352,7 @@ private void pintarTableroDesdeModelo() {
         guardarPartidaEnBD();
     }
 
-    private void testBD() {
-    try {
-        // 1) Inserta una partida de prueba en la BD
-        dao.insertar("EASY", 88);
-
-        // 2) Lee todas las partidas
-        PartidaSudoku[] partidas = dao.listarTodas();
-
-        // 3) Ordena por tu algoritmo
-        OrdenamientoSudoku.ordenarPorTiempoAsc(partidas);
-
-        // 4) Imprime en consola
-        System.out.println("=== PARTIDAS EN BD ===");
-        for (PartidaSudoku p : partidas) {
-            System.out.println(
-                p.getIdPartida() + " | " +
-                p.getDificultad() + " | " +
-                p.getTiempoSegundos() + "s | " +
-                p.getFecha()
-            );
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
+   
 
 
     @FXML
@@ -357,6 +377,22 @@ private void resolverSudoku() {
         }
         n = n.next;
     }
+}
+public void setDificultadInicial(String diff) {
+    this.dificultadActual = diff;
+}
+
+
+private void nuevoJuegoConDificultad(String diff) {
+    pilaMovimientos.clear();
+    model.limpiarTablero();
+    resetearTemporizador();
+
+    partidaGuardada = false;
+    SudokuGenerator.Dificultad d = SudokuGenerator.Dificultad.valueOf(diff);
+    generator.generarNuevoPuzzle(model, d);
+
+    pintarTableroDesdeModelo();
 }
 
 }

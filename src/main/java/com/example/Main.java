@@ -2,6 +2,7 @@ package com.example;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -11,14 +12,21 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/vistas/SudokuView.fxml")
+                getClass().getResource("/com/example/vistas/Menu.fxml")
         );
 
-        Scene scene = new Scene(loader.load());
+        Parent root = loader.load();
 
-        stage.setTitle("Sudoku FX");
+        Scene scene = new Scene(root);
+
+        // 👉 CSS DEL MENÚ (AQUÍ)
+        scene.getStylesheets().add(
+                getClass().getResource("/com/example/estilos/menu.css").toExternalForm()
+        );
+
+        stage.setTitle("Sudoku");
         stage.setScene(scene);
-        stage.setResizable(false); // opcional
+        stage.setResizable(false);
         stage.show();
     }
 
