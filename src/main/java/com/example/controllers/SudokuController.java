@@ -38,7 +38,9 @@ public class SudokuController implements Initializable {
 @FXML private ToggleButton btnMedium;
 @FXML private ToggleButton btnHard;
 @FXML private ToggleButton btnExpert;
-@FXML private Button btnHint;
+@FXML
+private Button btnPosibles;
+
 
 
 
@@ -96,9 +98,10 @@ public void initialize(URL url, ResourceBundle rb) {
 
     configurarDificultadUI();
     aplicarDificultadInicial();
-    conectarBotonAyuda();
+    conectarBotonPosibles();
 
-     System.out.println("btnHint = " + btnHint);
+
+
     System.out.println("btnUndo = " + btnUndo);
 
 }
@@ -449,15 +452,15 @@ private void nuevoJuegoConDificultad(String diff) {
 
     pintarTableroDesdeModelo();
 }
-private void conectarBotonAyuda() {
-    if (btnHint == null) {
-        System.out.println("⚠ btnHint es null. Revisa fx:id=\"btnHint\" en el FXML.");
+private void conectarBotonPosibles() {
+    if (btnPosibles == null) {
+        System.out.println("⚠ btnPosibles es null. Revisa fx:id=\"btnPosibles\" en el FXML.");
         return;
     }
 
-    btnHint.setOnAction(e -> {
-        System.out.println("💡 Click en Ayuda");
-        mostrarAyuda();
+    btnPosibles.setOnAction(e -> {
+        System.out.println("🌳 Click en Posibles Nums");
+        mostrarPosiblesNumeros();
     });
 }
 @FXML
@@ -474,13 +477,15 @@ private void salirJuego() {
         stage.close();
     }
 }
+@FXML
+private void mostrarPosiblesNumeros() {
+
 
 
 private void mostrarAyuda() {
     if (celdaSeleccionada == null) {
-        System.out.println("⚠ No hay celda seleccionada (haz click en una celda primero)");
         Alert a = new Alert(AlertType.WARNING);
-        a.setTitle("Ayuda");
+        a.setTitle("Posibles números");
         a.setHeaderText(null);
         a.setContentText("Primero selecciona una celda del tablero.");
         a.showAndWait();
@@ -491,15 +496,14 @@ private void mostrarAyuda() {
     int fila = pos[0];
     int columna = pos[1];
 
-    // si la celda ya tiene número, no hay candidatos
     CellNode celda = model.obtenerCelda(fila, columna);
     if (celda == null) return;
 
     if (celda.value != 0) {
         Alert a = new Alert(AlertType.INFORMATION);
-        a.setTitle("Ayuda 💡");
+        a.setTitle("Posibles números");
         a.setHeaderText("Esta celda ya tiene un número");
-        a.setContentText("Borra/deshaz para dejarla vacía y ver candidatos.");
+        a.setContentText("Deja la celda vacía para ver candidatos.");
         a.showAndWait();
         return;
     }
@@ -510,7 +514,7 @@ private void mostrarAyuda() {
     } catch (Exception ex) {
         ex.printStackTrace();
         Alert a = new Alert(AlertType.ERROR);
-        a.setTitle("Error Ayuda");
+        a.setTitle("Error en ayuda");
         a.setHeaderText("Falló SudokuHelper");
         a.setContentText(ex.getMessage());
         a.showAndWait();
@@ -518,12 +522,12 @@ private void mostrarAyuda() {
     }
 
     if (texto == null || texto.isBlank()) {
-        texto = "No hay candidatos válidos para esta celda (posible tablero inválido).";
+        texto = "No hay candidatos válidos.\n(El tablero actual puede estar inválido.)";
     }
 
     Alert alert = new Alert(AlertType.INFORMATION);
-    alert.setTitle("Ayuda 💡 (Candidatos como Árbol)");
-    alert.setHeaderText("Celda (" + fila + "," + columna + ")");
+    alert.setTitle("Posibles números 🌳");
+    alert.setHeaderText("Celda (" + (fila + 1) + "," + (columna + 1) + ")");
     alert.setContentText(texto);
     alert.setResizable(true);
     alert.showAndWait();
