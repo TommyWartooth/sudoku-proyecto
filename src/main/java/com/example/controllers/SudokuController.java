@@ -480,7 +480,55 @@ private void salirJuego() {
 @FXML
 private void mostrarPosiblesNumeros() {
 
+    if (celdaSeleccionada == null) {
+        Alert a = new Alert(AlertType.WARNING);
+        a.setTitle("Posibles números");
+        a.setHeaderText(null);
+        a.setContentText("Primero selecciona una celda del tablero.");
+        a.showAndWait();
+        return;
+    }
 
+    int[] pos = (int[]) celdaSeleccionada.getUserData();
+    int fila = pos[0];
+    int columna = pos[1];
+
+    CellNode celda = model.obtenerCelda(fila, columna);
+    if (celda == null) return;
+
+    if (celda.value != 0) {
+        Alert a = new Alert(AlertType.INFORMATION);
+        a.setTitle("Posibles números");
+        a.setHeaderText("Esta celda ya tiene un número");
+        a.setContentText("Deja la celda vacía para ver candidatos.");
+        a.showAndWait();
+        return;
+    }
+
+    String texto;
+    try {
+        texto = SudokuHelper.ayudaComoTexto(model, fila, columna);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        Alert a = new Alert(AlertType.ERROR);
+        a.setTitle("Error en ayuda");
+        a.setHeaderText("Falló SudokuHelper");
+        a.setContentText(ex.getMessage());
+        a.showAndWait();
+        return;
+    }
+
+    if (texto == null || texto.isBlank()) {
+        texto = "No hay candidatos válidos.\n(El tablero actual puede estar inválido.)";
+    }
+
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle("Posibles números 🌳");
+    alert.setHeaderText("Celda (" + (fila + 1) + "," + (columna + 1) + ")");
+    alert.setContentText(texto);
+    alert.setResizable(true);
+    alert.showAndWait();
+}
 
 private void mostrarAyuda() {
     if (celdaSeleccionada == null) {
