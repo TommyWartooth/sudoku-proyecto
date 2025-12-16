@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -125,11 +126,31 @@ private void cambiarDificultad() {
     ToggleButton sel = (ToggleButton) grupoDificultad.getSelectedToggle();
     if (sel == null) return;
 
-    dificultadActual = sel.getText().toUpperCase(); // EASY, MEDIUM...
+    String nueva = sel.getText().toUpperCase();
 
+    // si es la misma, nada
+    if (nueva.equals(dificultadActual)) {
+        refrescarClaseActiva();
+        return;
+    }
+
+    Alert confirm = new Alert(AlertType.CONFIRMATION);
+    confirm.setTitle("Cambiar dificultad");
+    confirm.setHeaderText("Cambiar a " + nueva + " reiniciará la partida");
+    confirm.setContentText("Perderás el progreso actual. ¿Continuar?");
+
+    var r = confirm.showAndWait();
+    if (r.isEmpty() || r.get() != javafx.scene.control.ButtonType.OK) {
+        // revertir selección visual
+        aplicarDificultadInicial();
+        return;
+    }
+
+    dificultadActual = nueva;
     refrescarClaseActiva();
     nuevoJuegoConDificultad(dificultadActual);
 }
+
 
 private void refrescarClaseActiva() {
     btnEasy.getStyleClass().remove("top-pill--active");
@@ -227,11 +248,17 @@ private void refrescarClaseActiva() {
         celdaSeleccionada.setText(numeroTexto);
 
         // ✅ chequear si ya se resolvió
-       if (model.sudokuResuelto() && !partidaGuardada) {
-        System.out.println("🎉 Sudoku resuelto correctamente!");
-        guardarPartidaEnBD();
-        partidaGuardada = true;
-    }
+   if (model.sudokuResuelto() && !partidaGuardada) {
+    partidaGuardada = true;
+    guardarPartidaEnBD();
+
+    Alert a = new Alert(AlertType.INFORMATION);
+    a.setTitle("¡Ganaste!");
+    a.setHeaderText("🎉 Sudoku resuelto");
+    a.setContentText("Tiempo: " + lblTime.getText() + "\nDificultad: " + dificultadActual);
+    a.showAndWait();
+}
+
     }
 
     // =========================================================
@@ -433,6 +460,21 @@ private void conectarBotonAyuda() {
         mostrarAyuda();
     });
 }
+@FXML
+private void salirJuego() {
+    Alert confirm = new Alert(AlertType.CONFIRMATION);
+    confirm.setTitle("Salir");
+    confirm.setHeaderText("¿Salir del juego?");
+    confirm.setContentText("Se perderá el progreso actual.");
+
+    var r = confirm.showAndWait();
+    if (r.isPresent() && r.get() == javafx.scene.control.ButtonType.OK) {
+        // cierra la ventana actual
+        Stage stage = (Stage) board.getScene().getWindow();
+        stage.close();
+    }
+}
+
 
 private void mostrarAyuda() {
     if (celdaSeleccionada == null) {

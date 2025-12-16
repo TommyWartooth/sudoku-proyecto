@@ -113,6 +113,8 @@
 
             
             <Button fx:id="btnNewGame" text="New Game" styleClass="btn-primary" maxWidth="1.7976931348623157E308"/>
+            <Button text="⟵ Salir" styleClass="btn-ghost" onAction="#salirJuego"/>
+
         </VBox>
     </right>
 
