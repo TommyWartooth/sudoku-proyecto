@@ -229,7 +229,7 @@ private void refrescarClaseActiva() {
         int fila = pos[0];
         int columna = pos[1];
 
-        // ✅ nombres obvios del modelo
+      
         CellNode nodoCelda = model.obtenerCelda(fila, columna);
         if (nodoCelda == null || nodoCelda.fixed) return;
 
@@ -238,19 +238,19 @@ private void refrescarClaseActiva() {
 
         if (numeroAnterior == numeroNuevo) return;
 
-        // ✅ validación Sudoku normal (nombre obvio)
+       
         if (!model.movimientoEsValido(fila, columna, numeroNuevo)) {
             return;
         }
 
-        // ✅ guardar en pila (Undo)
+    
         pilaMovimientos.push(new Move(fila, columna, numeroAnterior, numeroNuevo));
 
         // aplicar cambio en modelo + UI
         nodoCelda.value = numeroNuevo;
         celdaSeleccionada.setText(numeroTexto);
 
-        // ✅ chequear si ya se resolvió
+
    if (model.sudokuResuelto() && !partidaGuardada) {
     partidaGuardada = true;
     guardarPartidaEnBD();
@@ -278,7 +278,7 @@ private void refrescarClaseActiva() {
 
         Move movimiento = pilaMovimientos.pop();
 
-        // ✅ nombre obvio
+    
         CellNode nodoCelda = model.obtenerCelda(movimiento.row, movimiento.col);
         if (nodoCelda == null) return;
 
@@ -388,7 +388,7 @@ private void pintarTableroDesdeModelo() {
         }
     }
 
-    // Solo para prueba rápida (actívalo en initialize si quieres)
+
     private void probarGuardarRanking() {
         segundosTranscurridos = 123;
         guardarPartidaEnBD();
@@ -400,7 +400,7 @@ private void pintarTableroDesdeModelo() {
     @FXML
 private void resolverSudoku() {
 
-    // 1) pedir una copia resuelta
+   
     SudokuBoardLL solucion = SudokuSolver.resolverCopia(model);
 
     if (solucion == null) {
@@ -436,7 +436,7 @@ public void setDificultadInicial(String diff) {
         refrescarClaseActiva();
     }
 
-    // ✅ aquí se genera el tablero al entrar
+   
     nuevoJuegoConDificultad(dificultadActual);
 }
 
@@ -459,7 +459,7 @@ private void conectarBotonPosibles() {
     }
 
     btnPosibles.setOnAction(e -> {
-        System.out.println("🌳 Click en Posibles Nums");
+        System.out.println("Click en Posibles Nums");
         mostrarPosiblesNumeros();
     });
 }

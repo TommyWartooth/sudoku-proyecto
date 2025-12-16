@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -19,10 +20,13 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
 
-        // 👉 CSS DEL MENÚ (AQUÍ)
         scene.getStylesheets().add(
                 getClass().getResource("/com/example/estilos/menu.css").toExternalForm()
         );
+        
+ stage.getIcons().add(
+        new Image(getClass().getResourceAsStream("/icons/sonrisa.png"))
+    );
 
         stage.setTitle("Sudoku");
         stage.setScene(scene);
