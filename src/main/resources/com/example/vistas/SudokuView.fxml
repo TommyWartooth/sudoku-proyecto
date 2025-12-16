@@ -89,6 +89,7 @@
                 
                 <Button fx:id="btnSol" text="✎ Solve" styleClass="icon-btn" onAction="#resolverSudoku" />
                 <Button fx:id="btnUndo"  text="↺ Deshacer" styleClass="icon-btn"/>
+                <Button fx:id="btnPosibles"  text="Posibles Nums" styleClass="icon-btn"/>
             </HBox>
 
             <Separator/>
