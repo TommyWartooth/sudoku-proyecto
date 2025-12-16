@@ -1,5 +1,6 @@
 package com.example.model;
-
+import java.util.ArrayList;
+import java.util.List;
 public class SudokuBoardLL {
 
     // =======================
@@ -13,6 +14,21 @@ public class SudokuBoardLL {
     public SudokuBoardLL() {
         construirTableroCon81Celdas(); //yama a la funsion de construirtablero
     }
+    public List<Integer> obtenerCandidatos(int fila, int columna) {
+    List<Integer> candidatos = new ArrayList<>();
+
+    CellNode celda = obtenerCelda(fila, columna);
+    if (celda == null) return candidatos;
+    if (celda.fixed) return candidatos;
+    if (celda.value != 0) return candidatos;
+
+    for (int num = 1; num <= 9; num++) {
+        if (movimientoEsValido(fila, columna, num)) {
+            candidatos.add(num);
+        }
+    }
+    return candidatos;
+}
 
     // =======================
     // CREACIÓN DEL TABLERO

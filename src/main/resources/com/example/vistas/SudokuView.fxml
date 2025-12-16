@@ -86,9 +86,9 @@
             <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
 
             <HBox spacing="10">
-                <Button text="💡" styleClass="icon-btn"/>
+                
                 <Button fx:id="btnSol" text="✎ Solve" styleClass="icon-btn" onAction="#resolverSudoku" />
-                <Button fx:id="btnUndo"  text="↺" styleClass="icon-btn"/>
+                <Button fx:id="btnUndo"  text="↺ Deshacer" styleClass="icon-btn"/>
             </HBox>
 
             <Separator/>
