@@ -4,10 +4,10 @@
 Este proyecto consiste en el desarrollo de un juego de Sudoku en Java con interfaz gráfica usando JavaFX, enfocado en la aplicación práctica de estructuras de datos y algoritmos de búsqueda.
 El sistema modela el tablero y la lógica del juego utilizando listas enlazadas, nodos, pilas y árboles, evitando el uso directo de matrices para reforzar el aprendizaje de estructuras dinámicas.
 
-# 🧩 Sudoku JavaFX  
+# Sudoku JavaFX  
 Juego de Sudoku con estructuras de datos y algoritmos de búsqueda
 
-## 🚀 Tecnologías Usadas
+## Tecnologías Usadas
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=java&logoColor=white" />
