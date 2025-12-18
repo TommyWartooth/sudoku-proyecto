@@ -89,6 +89,14 @@ src/
      │   └── OrdenamientoSudoku
      └── Main.java        # Punto de entrada
 ```
+
+Logica revisada por:
+<p align="center">
+<img src="https://github.com/user-attachments/assets/09f85783-682d-4c1c-8afc-04b4577da552" width="150"/>
+<img src="https://github.com/user-attachments/assets/f0d88037-bace-4211-8ead-0218b32a10ba" width="250"/>
+<img src="https://github.com/user-attachments/assets/5a933530-b018-43c2-9a67-fb21b0a939a2" width="150"/>
+</p>
+
 👥 Autores
 <table align="center"> <tr> <td align="center"> <a href="https://github.com/bigMackProject"> <img src="https://avatars.githubusercontent.com/u/209021209?v=4" width="120px;" /> <br /> <sub><b>Paulo Escaray</b></sub> </a> </td> <td align="center"> <a href="https://github.com/TommyWartooth"> <img src="https://avatars.githubusercontent.com/u/169411148?v=4" width="120px;" /> <br /> <sub><b>Emilia Crespo</b></sub> </a> </td> <td align="center"> <a href="https://github.com/annetryoshka"> <img src="https://avatars.githubusercontent.com/u/164533936?v=4" width="120px;" /> <br /> <sub><b>Adriana Pando</b></sub> </a> </td> </tr> </table>
 
