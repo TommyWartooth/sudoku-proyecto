@@ -87,9 +87,6 @@ public class SudokuBoardLL {
         }
     }
 
-    // =========================================================
-    // VALIDACIÓN DE JUGADA (Sudoku normal)
-    // =========================================================
     public boolean movimientoEsValido(int fila, int columna, int numero) {
 
         if (numero < 1 || numero > 9) return false;
@@ -122,9 +119,7 @@ public class SudokuBoardLL {
         return true;
     }
 
-    // =========================================================
-    // VALIDACIÓN DEL TABLERO COMPLETO
-    // =========================================================
+
     public boolean tableroEsValido() {
 
         for (int fila = 0; fila < 9; fila++) {
@@ -154,9 +149,7 @@ public class SudokuBoardLL {
         return tableroEsValido();
     }
 
-    // =========================================================
-    // VALIDACIONES INTERNAS
-    // =========================================================
+
     private boolean filaEsValida(int fila) {
         boolean[] usado = new boolean[10];
         CellNode actual = primerNodo;

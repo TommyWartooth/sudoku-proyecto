@@ -47,8 +47,7 @@ private Button btnPosibles;
 private final ToggleGroup grupoDificultad = new ToggleGroup();
 private boolean partidaGuardada = false;
 
-    // =======================
-    // FXML
+
     // =======================
     @FXML private GridPane board;
     @FXML private GridPane keypad;
@@ -156,9 +155,6 @@ private void refrescarClaseActiva() {
 }
 
 
-    // =========================================================
-    // TABLERO (UI)
-    // =========================================================
     private void construirTableroUI() {
         board.getChildren().clear();
 
@@ -254,9 +250,6 @@ private void refrescarClaseActiva() {
 
     }
 
-    // =========================================================
-    // UNDO
-    // =========================================================
     private void conectarBotonDeshacer() {
         if (btnUndo != null) {
             btnUndo.setOnAction(e -> deshacerMovimiento());
@@ -281,9 +274,6 @@ private void refrescarClaseActiva() {
         }
     }
 
-    // =========================================================
-    // NEW GAME
-    // =========================================================
     private void conectarBotonNuevoJuego() {
         if (btnNewGame != null) {
             btnNewGame.setOnAction(e -> nuevoJuego());

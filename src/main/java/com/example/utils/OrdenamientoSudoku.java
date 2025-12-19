@@ -4,7 +4,6 @@ import com.example.model.PartidaSudoku;
 
 public class OrdenamientoSudoku {
 
-    // Insertion sort: menor tiempo = mejor
     public static void ordenarPorTiempoAsc(PartidaSudoku[] a) {
         for (int i = 1; i < a.length; i++) {
             PartidaSudoku key = a[i];
@@ -22,7 +21,7 @@ public class OrdenamientoSudoku {
         if (x.getTiempoSegundos() != y.getTiempoSegundos()) {
             return x.getTiempoSegundos() > y.getTiempoSegundos();
         }
-        // empate: más reciente primero
+   
         return x.getFecha().isBefore(y.getFecha());
     }
 }

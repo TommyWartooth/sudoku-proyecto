@@ -4,7 +4,6 @@ import java.util.List;
 
 public class ArbolBinarioCandidatos {
 
-    // Nodo de árbol binario
     public static class Nodo {
         public int valor;
         public Nodo izq;
@@ -21,7 +20,7 @@ public class ArbolBinarioCandidatos {
         return raiz;
     }
 
-    // Insert simple (BST) para que se vea clarísimo "árbol"
+   
     public void insertar(int valor) {
         raiz = insertarRec(raiz, valor);
     }
@@ -41,7 +40,7 @@ public class ArbolBinarioCandidatos {
         return arbol;
     }
 
-    // Imprimir árbol en forma simple (preorder)
+
     public String imprimirPreorden() {
         StringBuilder sb = new StringBuilder();
         imprimirPreordenRec(raiz, sb, "");
