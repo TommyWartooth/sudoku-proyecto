@@ -3,14 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 public class SudokuBoardLL {
 
-    // =======================
-    // LISTA ENLAZADA (81 nodos)
-    // =======================
+    
     private CellNode primerNodo; //atributo d primernodo
 
-    // =======================
-    // CONSTRUCTOR
-    // =======================
     public SudokuBoardLL() {
         construirTableroCon81Celdas(); //yama a la funsion de construirtablero
     }
@@ -30,8 +25,7 @@ public class SudokuBoardLL {
     return candidatos;
 }
 
-    // =======================
-    // CREACIÓN DEL TABLERO
+    
     // =======================
     private void construirTableroCon81Celdas() {
         CellNode nodoAnterior = null; //nodo gay
@@ -54,21 +48,14 @@ public class SudokuBoardLL {
         }
     }
 
-    // =======================
-    // GETTERS IMPORTANTES
-    // =======================
     public CellNode getPrimerNodo() {
         return primerNodo;
     }
 
-    // (alias por si tu controller/validator usa getNode)
     public CellNode getNode(int fila, int columna) {
         return obtenerCelda(fila, columna);
     }
 
-    // =======================
-    // ACCESO A CELDAS
-    // =======================
     public CellNode obtenerCelda(int fila, int columna) {
         CellNode actual = primerNodo;
 
@@ -81,9 +68,7 @@ public class SudokuBoardLL {
         return null;
     }
 
-    // =======================
-    // LIMPIAR TABLERO
-    // =======================
+ 
     public void limpiarTablero() {
         CellNode actual = primerNodo;
 
@@ -94,9 +79,6 @@ public class SudokuBoardLL {
         }
     }
 
-    // =======================
-    // MARCAR FIJAS
-    // =======================
     public void marcarCeldasFijasSegunValor() {
         CellNode actual = primerNodo;
         while (actual != null) {

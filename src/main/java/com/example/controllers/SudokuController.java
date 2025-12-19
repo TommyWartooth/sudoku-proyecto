@@ -56,28 +56,18 @@ private boolean partidaGuardada = false;
     @FXML private Button btnNewGame;
     @FXML private Label lblTime;
 
-    // =======================
-    // UI
-    // =======================
+    
     private Button celdaSeleccionada;
 
-    // =======================
-    // MODELO (LinkedList)
-    // =======================
     private final SudokuBoardLL model = new SudokuBoardLL();
 
-    // =======================
-    // PILA (Undo)
-    // =======================
+
     private final Deque<Move> pilaMovimientos = new ArrayDeque<>();
 
-    // =======================
-    // TIMER
-    // =======================
     private Timeline temporizador;
     private int segundosTranscurridos = 0;
 
-    private String dificultadActual = "EASY"; //de momento está así hasta q haya la lógica para elegir dificultad unu
+    private String dificultadActual = "EASY"; 
 
     // ====== DB (ajusta a tu BD) ======
     private final PartidaSudokuDAO dao = new PartidaSudokuDAO(
@@ -321,9 +311,7 @@ private void pintarTableroDesdeModelo() {
 }
 
 
-    // =========================================================
-    // TIMER
-    // =========================================================
+
     private void iniciarTemporizador() {
         if (temporizador != null) temporizador.stop();
 
@@ -404,11 +392,11 @@ private void resolverSudoku() {
     SudokuBoardLL solucion = SudokuSolver.resolverCopia(model);
 
     if (solucion == null) {
-        System.out.println("❌ Este Sudoku NO tiene solución");
+        System.out.println(" Este Sudoku NO tiene solución");
         return;
     }
 
-    System.out.println("✅ Sudoku solucionado correctamente");
+    System.out.println(" Sudoku solucionado correctamente");
 
     // 2) pintar la solución en la UI
     CellNode n = solucion.getPrimerNodo();

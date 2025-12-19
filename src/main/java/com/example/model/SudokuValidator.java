@@ -2,9 +2,6 @@ package com.example.model;
 
 public class SudokuValidator {
 
-    // =========================================
-    // Validar si una jugada es válida
-    // =========================================
     public static boolean movimientoValido(
             SudokuBoardLL tablero,
             int fila,
@@ -36,9 +33,7 @@ public class SudokuValidator {
         return true;
     }
 
-    // =========================================
-    // Validar tablero completo (Sudoku normal)
-    // =========================================
+
     public static boolean tableroValido(SudokuBoardLL tablero) {
 
         for (int i = 0; i < 9; i++) {
@@ -54,9 +49,6 @@ public class SudokuValidator {
         return true;
     }
 
-    // =========================================
-    // Sudoku resuelto
-    // =========================================
     public static boolean sudokuResuelto(SudokuBoardLL tablero) {
         CellNode actual = tablero.getPrimerNodo();
         while (actual != null) {
@@ -66,7 +58,6 @@ public class SudokuValidator {
         return tableroValido(tablero);
     }
 
-    // -------- helpers privados --------
 
     private static boolean filaValida(SudokuBoardLL tablero, int fila) {
         boolean[] visto = new boolean[10];

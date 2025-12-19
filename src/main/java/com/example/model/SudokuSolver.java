@@ -9,20 +9,16 @@ public class SudokuSolver {
 
     private static final Random rnd = new Random();
 
-    /**
-     * Resuelve el Sudoku "in place" (modifica el tablero).
-     * Retorna true si encontró solución.
-     */
+
     public static boolean resolver(SudokuBoardLL tablero) {
         CellNode mejor = buscarMejorCeldaVacia(tablero);
-        if (mejor == null) return true; // no hay vacías => resuelto
+        if (mejor == null) return true; 
 
         List<Integer> candidatos = candidatosPara(tablero, mejor.row, mejor.col);
 
-        // si no hay candidatos, este camino es imposible
         if (candidatos.isEmpty()) return false;
 
-        // opcional: mezclar para variar soluciones
+      
         Collections.shuffle(candidatos, rnd);
 
         for (int num : candidatos) {
@@ -33,32 +29,26 @@ public class SudokuSolver {
         return false;
     }
 
-    /**
-     * Devuelve una COPIA resuelta (si existe), sin tocar el original.
-     * Si no hay solución, retorna null.
-     */
     public static SudokuBoardLL resolverCopia(SudokuBoardLL original) {
         SudokuBoardLL copia = copiarTablero(original);
         if (resolver(copia)) return copia;
         return null;
     }
 
-    // =========================================================
-    // Heurística: elegir la celda vacía con MENOS candidatos
-    // (evita muchos “imposibles” y acelera)
-    // =========================================================
+   
     private static CellNode buscarMejorCeldaVacia(SudokuBoardLL tablero) {
         CellNode n = tablero.getPrimerNodo();
 
         CellNode mejor = null;
         int mejorCant = Integer.MAX_VALUE;
+        
 
         while (n != null) {
             if (n.value == 0) {
                 List<Integer> cand = candidatosPara(tablero, n.row, n.col);
 
-                // si una vacía tiene 0 candidatos -> tablero inconsistente
-                if (cand.isEmpty()) return n; // devolverla igual (resolver() fallará rápido)
+
+                if (cand.isEmpty()) return n; 
 
                 if (cand.size() < mejorCant) {
                     mejorCant = cand.size();
@@ -68,13 +58,8 @@ public class SudokuSolver {
             }
             n = n.next;
         }
-        return mejor; // puede ser null si no hay vacías
+        return mejor; 
     }
-
-    // =========================================================
-    // Candidatos válidos para (fila, col)
-    // SOLO reglas Sudoku: fila/col/bloque
-    // =========================================================
     private static List<Integer> candidatosPara(SudokuBoardLL tablero, int fila, int col) {
         boolean[] usado = new boolean[10]; // usado[v] = true si ya está en conflicto
 
@@ -105,9 +90,7 @@ public class SudokuSolver {
         return cand;
     }
 
-    // =========================================================
-    // Copiar tablero (valores) ignorando fixed (solver no lo necesita)
-    // =========================================================
+  
     private static SudokuBoardLL copiarTablero(SudokuBoardLL original) {
         SudokuBoardLL copia = new SudokuBoardLL();
 

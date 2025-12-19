@@ -20,9 +20,9 @@ public class SudokuGenerator {
 
         tablero.marcarCeldasFijasSegunValor();
         // al final de generarNuevoPuzzle(...)
-SudokuBoardLL copia = SudokuSolver.resolverCopia(tablero);
-if (copia == null) {
-    throw new IllegalStateException("Generé un puzzle sin solución (imposible).");
+        SudokuBoardLL copia = SudokuSolver.resolverCopia(tablero);
+        if (copia == null) {
+            throw new IllegalStateException("Generé un puzzle sin solución (imposible).");
 }
 
     }
@@ -61,9 +61,6 @@ if (copia == null) {
         return nums;
     }
 
-    // =====================================================
-    // 2) Quitar celdas pero SIN romper la resolubilidad
-    // =====================================================
     private void quitarCeldasManteniendoSolucion(SudokuBoardLL tablero, int aEliminar) {
         List<CellNode> celdas = todasLasCeldas(tablero);
         Collections.shuffle(celdas, rnd);
@@ -77,7 +74,7 @@ if (copia == null) {
             int backup = celda.value;
             celda.value = 0;
 
-            // ✅ chequeo fuerte: debe seguir teniendo al menos 1 solución
+            // chequeo fuerte: debe seguir teniendo al menos 1 solución
             if (!tieneAlMenosUnaSolucion(tablero)) {
                 celda.value = backup; // revertir
                 continue;
@@ -98,8 +95,6 @@ if (copia == null) {
     }
 
     // =====================================================
-    // 3) “Tiene al menos una solución”
-    // =====================================================
     private boolean tieneAlMenosUnaSolucion(SudokuBoardLL original) {
         SudokuBoardLL copia = copiarTablero(original);
         return resolverBacktracking(copia);
@@ -113,7 +108,7 @@ if (copia == null) {
 
         while (a != null && b != null) {
             b.value = a.value;
-            b.fixed = false; // solver no usa fixed
+            b.fixed = false; 
             a = a.next;
             b = b.next;
         }
@@ -134,9 +129,7 @@ if (copia == null) {
         return false;
     }
 
-    // =====================================================
-    // Validación SOLO reglas Sudoku (ignora fixed)
-    // =====================================================
+
     private boolean movimientoValidoIgnorandoFixed(SudokuBoardLL tablero, int fila, int col, int valor) {
         if (valor < 1 || valor > 9) return false;
 
